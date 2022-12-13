@@ -6,7 +6,7 @@ import { AmbientLight, Color, PerspectiveCamera, Scene, SpotLight, Vector2, WebG
 import * as THREE from 'three';
 
 const brickWidth = 7;
-const brickHeight = 10;
+let brickHeight = 3;
 
 // Create scene
 const scene = new Scene();
@@ -30,6 +30,7 @@ light.shadow.mapSize.height = 512 * 8;
 scene.add(light);
 
 var score = 0;
+var levelScore = 0;
 
 // Add the walls to the scene
 new Walls(scene);
@@ -42,13 +43,20 @@ window.addEventListener("pointEvent", (p) =>
 {
     // Increase the score
     score++
+    levelScore++
 
     // Update the html text display of the score
     document.getElementById("Score").textContent = "Score: " + score
 
     // Spawn a new set of bricks everytime we clear all the bricks
-    if (score % (brickWidth * brickHeight) == 0)
+    if (levelScore >= brickWidth * brickHeight)
     {
+        levelScore = 0
+        brickHeight++
+        if (brickHeight > 10)
+        {
+            brickHeight = 10;
+        }
         ball.isHeld = true;
         spawnBricks();
     }
@@ -59,6 +67,8 @@ window.addEventListener("gameover", (p) =>
 {
     // Set score to zero
     score = 0
+    levelScore = 0
+    brickHeight = 3;
 
     // Set html score to zero
     document.getElementById("Score").textContent = "Score: " + score
